@@ -1,0 +1,28 @@
+{
+  "name": "multer-gdrive",
+  "version": "1.0.0",
+  "description": "google drive storage engine for multer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/areverberi/multer-gdrive.git"
+  },
+  "keywords": [
+    "multer",
+    "storage",
+    "drive",
+    "googleapis"
+  ],
+  "author": "Andrea Reverberi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/areverberi/multer-gdrive/issues"
+  },
+  "homepage": "https://github.com/areverberi/multer-gdrive#readme",
+  "dependencies": {
+    "googleapis": "^12.1.0"
+  }
+}
