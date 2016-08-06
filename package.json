@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/areverberi/multer-gdrive#readme",
   "dependencies": {
-    "googleapis": "^12.1.0"
+    "googleapis": "^12.1.0",
+    "uuid": "^2.0.2"
   }
 }

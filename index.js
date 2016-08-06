@@ -1,5 +1,5 @@
 var google = require('googleapis'),
-  tmpfile = require('tempfile');
+  uuid = require('uuid');
 
 
 function DriveStorage(opts) {
@@ -9,7 +9,7 @@ function DriveStorage(opts) {
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   this.drive.files.create({
     resource: {
-      name: tmpfile(),
+      name: uuid.v4(),
       mimeType: file.mimetype,
     },
     media: {
