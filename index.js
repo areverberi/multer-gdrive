@@ -9,7 +9,7 @@ function DriveStorage(opts) {
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   this.drive.files.create({
     resource: {
-      name: uuid.v4(),
+      name: file.originalname,
       mimeType: file.mimetype,
     },
     media: {
