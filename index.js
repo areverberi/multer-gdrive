@@ -17,6 +17,10 @@ DriveStorage.prototype._handleFile = function(req, file, cb) {
       body: file.stream,
     }
   }, function(err, response) {
+    if(err) {
+      console.log(err);
+      return cb(err, null);
+    }
     cb(err, {
       googleId: response.id
     });
