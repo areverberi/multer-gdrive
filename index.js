@@ -2,11 +2,16 @@ var google = require('googleapis'),
   uuid = require('uuid');
 
 
-function DriveStorage(opts) {
+function DriveStorage(opts, preproc) {
   this.drive = google.drive({ version : 'v3', auth : opts});
+  this.preproc = preproc;
 }
 
 DriveStorage.prototype._handleFile = function(req, file, cb) {
+  var stream = file.stream;
+  if(typeof this.preproc === 'function') {
+    stream = this.preproc(stream);
+  }
   this.drive.files.create({
     resource: {
       name: file.originalname,
@@ -14,7 +19,7 @@ DriveStorage.prototype._handleFile = function(req, file, cb) {
     },
     media: {
       mimeType: file.mimetype,
-      body: file.stream,
+      body: stream,
     }
   }, function(err, response) {
     if(err) {
@@ -33,6 +38,6 @@ DriveStorage.prototype._removeFile = function(req, file, cb) {
   }, cb);
 };
 
-module.exports = function (opts) {
-  return new DriveStorage(opts);
+module.exports = function (opts, preproc) {
+  return new DriveStorage(opts, preproc);
 };
