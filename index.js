@@ -1,6 +1,6 @@
 var google = require('googleapis'),
   uuid = require('uuid'),
-  concat = require('concat-stream');
+  Promise = require('bluebird');
 
 
 function DriveStorage(opts, preproc) {
@@ -10,29 +10,35 @@ function DriveStorage(opts, preproc) {
 
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   var stream = file.stream;
-  //this turns the stream to a buffer
   var concatStream = concat(this.preproc);
   if(typeof this.preproc === 'function') {
-    stream = stream.pipe(concatStream);
+    stream = this.preproc(stream);
+  } else {
+    stream = new Promise(function(resolve) {
+      return resolve(stream);
+    });
   }
-  this.drive.files.create({
-    resource: {
-      name: file.originalname,
-      mimeType: file.mimetype,
-    },
-    media: {
-      mimeType: file.mimetype,
-      body: stream,
-    }
-  }, function(err, response) {
-    if(err) {
-      console.log(err);
-      return cb(err, null);
-    }
-    cb(err, {
-      googleId: response.id
+  stream.then(function(_stream) {
+    this.drive.files.create({
+      resource: {
+        name: file.originalname,
+        mimeType: file.mimetype,
+      },
+      media: {
+        mimeType: file.mimetype,
+        body: _stream,
+      }
+    }, function(err, response) {
+      if(err) {
+        console.log(err);
+        return cb(err, null);
+      }
+      cb(err, {
+        googleId: response.id
+      });
     });
   });
+
 };
 
 DriveStorage.prototype._removeFile = function(req, file, cb) {
