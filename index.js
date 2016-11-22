@@ -1,5 +1,6 @@
 var google = require('googleapis'),
-  uuid = require('uuid');
+  uuid = require('uuid'),
+  concat = require('concat-stream');
 
 
 function DriveStorage(opts, preproc) {
@@ -9,8 +10,10 @@ function DriveStorage(opts, preproc) {
 
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   var stream = file.stream;
+  //this turns the stream to a buffer
+  var concatStream = concat(this.preproc);
   if(typeof this.preproc === 'function') {
-    stream = this.preproc(stream);
+    stream = stream.pipe(concatStream);
   }
   this.drive.files.create({
     resource: {
