@@ -10,7 +10,6 @@ function DriveStorage(opts, preproc) {
 
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   var stream = file.stream;
-  var concatStream = concat(this.preproc);
   if(typeof this.preproc === 'function') {
     stream = this.preproc(stream);
   } else {
