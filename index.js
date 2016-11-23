@@ -10,6 +10,7 @@ function DriveStorage(opts, preproc) {
 
 DriveStorage.prototype._handleFile = function(req, file, cb) {
   var stream = file.stream;
+  var self = this;
   if(typeof this.preproc === 'function') {
     stream = this.preproc(stream);
   } else {
@@ -19,7 +20,7 @@ DriveStorage.prototype._handleFile = function(req, file, cb) {
   }
   stream
     .then(function(_stream) {
-      this.drive.files.create({
+      self.drive.files.create({
         resource: {
           name: file.originalname,
           mimeType: file.mimetype,
