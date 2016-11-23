@@ -17,27 +17,30 @@ DriveStorage.prototype._handleFile = function(req, file, cb) {
       return resolve(stream);
     });
   }
-  stream.then(function(_stream) {
-    this.drive.files.create({
-      resource: {
-        name: file.originalname,
-        mimeType: file.mimetype,
-      },
-      media: {
-        mimeType: file.mimetype,
-        body: _stream,
-      }
-    }, function(err, response) {
-      if(err) {
-        console.log(err);
-        return cb(err, null);
-      }
-      cb(err, {
-        googleId: response.id
+  stream
+    .then(function(_stream) {
+      this.drive.files.create({
+        resource: {
+          name: file.originalname,
+          mimeType: file.mimetype,
+        },
+        media: {
+          mimeType: file.mimetype,
+          body: _stream,
+        }
+      }, function(err, response) {
+        if(err) {
+          console.log(err);
+          return cb(err, null);
+        }
+        return cb(err, {
+          googleId: response.id
+        });
       });
+    })
+    .catch(function(err) {
+      console.error('caught error', err);
     });
-  });
-
 };
 
 DriveStorage.prototype._removeFile = function(req, file, cb) {
